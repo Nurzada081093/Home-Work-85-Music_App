@@ -57,7 +57,7 @@ const run = async () => {
             artist: InnaArtist._id,
             title: 'El Pasado',
             releaseDate: 2023,
-            image: 'fixtures/Inna_hot.jpg',
+            image: 'fixtures/ElPasado.jpg',
         },
         {
             artist: AdeleArtist._id,
@@ -112,7 +112,7 @@ const run = async () => {
         },
         {
             album: XAlbum._id,
-            title: 'bloodstream',
+            title: 'Bloodstream',
             trackDuration: '5:00',
             number: 2
         },

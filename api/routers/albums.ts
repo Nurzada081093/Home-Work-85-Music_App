@@ -12,7 +12,7 @@ albumsRouter.get('/', async (req, res, next) => {
 
     try {
         const filter = artistIdQuery ? {artist: artistIdQuery} : {};
-        const albums = await Album.find(filter).sort({releaseDate: -1});
+        const albums = await Album.find(filter).sort({releaseDate: -1}).populate('artist');
         res.send(albums);
     } catch (e) {
         next(e);

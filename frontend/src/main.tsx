@@ -3,10 +3,13 @@ import App from './App.tsx';
 import { CssBaseline } from '@mui/joy';
 import { Provider } from 'react-redux';
 import { store } from './app/store.ts';
+import { BrowserRouter } from 'react-router-dom';
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
-    <CssBaseline />
-    <App />
+    <BrowserRouter>
+      <CssBaseline />
+      <App />
+    </BrowserRouter>
   </Provider>
 );
