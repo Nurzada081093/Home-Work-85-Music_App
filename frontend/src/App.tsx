@@ -1,10 +1,14 @@
 import './App.css';
+import ToolBar from './components/UI/ToolBar/ToolBar.tsx';
 
 const App = () => {
 
   return (
     <>
-      I'm starting my home work #85! ^_^
+      <header>
+        <ToolBar/>
+      </header>
+
     </>
   );
 };

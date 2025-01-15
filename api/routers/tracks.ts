@@ -13,7 +13,7 @@ tracksRouter.get('/', async (req, res, next) => {
 
     try {
         if (albumIdQuery) {
-            const tracks = await Track.find({album: albumIdQuery});
+            const tracks = await Track.find({album: albumIdQuery}).sort({'number': 1});
             res.send(tracks);
             return;
         }
@@ -28,7 +28,7 @@ tracksRouter.get('/', async (req, res, next) => {
 
             const albums = await Album.find({artist: artistIdQuery});
             const albumsId = albums.map(album => album._id);
-            const tracks = await Track.find({album: {$in: albumsId}});
+            const tracks = await Track.find({album: {$in: albumsId}}).sort({'number': 1});
             res.send(tracks);
             return;
         }
@@ -39,7 +39,7 @@ tracksRouter.get('/', async (req, res, next) => {
                 path: 'artist',
                 model: 'Artist'
             }
-        });
+        }).sort({'number': 1});
         res.send(tracksAll);
 
     } catch (e) {
@@ -62,6 +62,7 @@ tracksRouter.post('/', async (req, res, next) => {
         album: req.body.album,
         title: req.body.title,
         trackDuration: req.body.trackDuration,
+        number: req.body.number,
     }
 
     try {

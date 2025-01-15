@@ -19,6 +19,13 @@ const UserSchema = new Schema<UserData, UserModel, UserMethods>({
         type: String,
         required: [true, 'Username is required'],
         unique: true,
+        validate: {
+            validator: async function (value: string): Promise<boolean> {
+                const user: UserData | null = await User.findOne({username: value});
+                return !user;
+            },
+            message: 'This username is already in taken!',
+        },
     },
     password: {
         type: String,
@@ -48,7 +55,7 @@ UserSchema.methods.generateToken = function () {
 };
 
 UserSchema.set('toJSON', {
-    transform: (doc, ret, options) => {
+    transform: (_doc, ret, _options) => {
         delete ret.password;
         return ret;
     }

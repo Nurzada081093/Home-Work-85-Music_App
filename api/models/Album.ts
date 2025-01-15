@@ -13,7 +13,7 @@ const AlbumSchema = new Schema({
         required: [true, 'Title is required'],
     },
     releaseDate: {
-        type: String,
+        type: Number,
         required: [true, 'Release date is required'],
     },
     image: String,
