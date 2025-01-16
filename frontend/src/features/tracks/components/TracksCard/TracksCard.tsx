@@ -24,7 +24,7 @@ interface Props {
 
 const TracksCard:React.FC<Props> = ({track}) => {
   return (
-    <Box sx={{ width: '100%', overflow: 'hidden', position: 'relative', p: 3 }}>
+    <Box sx={{ width: '100%', overflow: 'hidden', position: 'relative', p: '20px 30px' }}>
       <Widget>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Box sx={{ width: '100%'}}>
