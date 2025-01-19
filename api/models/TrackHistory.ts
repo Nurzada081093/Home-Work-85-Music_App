@@ -16,6 +16,10 @@ const TrackHistorySchema = new Schema({
     datetime: {
         type: String,
         default: () => new Date().toISOString(),
+    },
+    artist: {
+        type: Schema.Types.ObjectId,
+        ref: 'Artist',
     }
 });
 

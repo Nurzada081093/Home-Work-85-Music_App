@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axiosRequest from '../../axiosRequest.ts';
 import { GlobalError, IUser, UserLogin, UserRegister, UserRegisterResponse, ValidationError } from '../../types';
 import { isAxiosError } from 'axios';
+import { RootState } from '../../app/store.ts';
 
 export const registerUser = createAsyncThunk<UserRegisterResponse, UserRegister, {rejectValue: ValidationError}>(
   'users/registerUser',
@@ -30,5 +31,13 @@ export const loginUser = createAsyncThunk<IUser, UserLogin, {rejectValue: Global
       }
       throw error;
     }
+  }
+);
+
+export const logoutUser = createAsyncThunk<void, void, {state: RootState}>(
+  "users/logoutUser",
+  async (_, {getState}) => {
+    const token = getState().users.user?.token;
+    await axiosRequest.delete(`users/sessions/`, {headers: {'Authorization': token}});
   }
 );

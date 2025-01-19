@@ -1,38 +1,31 @@
 import express from "express";
-import User from "../models/User";
 import Track from "../models/Track";
 import TrackHistory from "../models/TrackHistory";
 import {Error} from "mongoose";
+import Album from "../models/Album";
+import Artist from "../models/Artist";
+import auth, {RequestWithUser} from "../middleware/auth";
 
 const trackHistoryRouter = express.Router();
 
-trackHistoryRouter.post('/', async (req, res, next) => {
-    const token = req.get('Authorization');
+trackHistoryRouter.post('/', auth, async (req, res, next) => {
+    let expressReq = req as RequestWithUser;
+    const user = expressReq.user;
 
-    if (!token) {
-        res.status(401).send({error: "No token present!"});
+    const track = await Track.findById(req.body.track).populate('album');
+
+    if (!track) {
+        res.status(404).send({error: 'Not found this track!'});
         return;
     }
 
-    const user = await User.findOne({token: token});
-
-    if (!user) {
-        res.status(401).send({error: "Unauthorized!"});
-        return;
-    }
-
-    if (req.body.track) {
-        const track = await Track.findById(req.body.track);
-
-        if (!track) {
-            res.status(404).send({error: 'Not found this track!'});
-            return;
-        }
-    }
+    const album = await Album.findById(track.album._id).populate('artist');
+    const artist = await Artist.findById(album?.artist._id);
 
     const newTrackHistory = {
         user,
-        track: req.body.track
+        artist,
+        track: expressReq.body.track,
     };
 
     try {
@@ -45,6 +38,18 @@ trackHistoryRouter.post('/', async (req, res, next) => {
             return;
         }
 
+        next(error);
+    }
+});
+
+trackHistoryRouter.get("/", auth, async (req, res, next) => {
+    let expressReq = req as RequestWithUser;
+    const user = expressReq.user;
+
+    try {
+        const trackHistories = await TrackHistory.find({user: user._id}).sort({datetime: -1}).populate('track').populate('artist');
+        res.send(trackHistories)
+    } catch (error) {
         next(error);
     }
 });

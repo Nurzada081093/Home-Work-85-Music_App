@@ -3,6 +3,10 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { ITrack } from '../../../../types';
 import { styled } from '@mui/joy';
+import PlayArrowRounded from '@mui/icons-material/PlayArrowRounded';
+import { useAppDispatch, useAppSelector } from '../../../../app/hooks.ts';
+import { userFromSlice } from '../../../users/usersSlice.ts';
+import { addTrackHistory } from '../../../trackHistories/trackHistoriesThunk.ts';
 
 const Widget = styled('div')(({ theme }) => ({
   padding: 16,
@@ -23,6 +27,15 @@ interface Props {
 }
 
 const TracksCard:React.FC<Props> = ({track}) => {
+  const user = useAppSelector(userFromSlice);
+  const dispatch = useAppDispatch();
+
+  const getTrackHistory = (trackId: string) => {
+    if (user) {
+      dispatch(addTrackHistory({track: trackId, token: user.token}));
+    }
+  };
+
   return (
     <Box sx={{ width: '100%', overflow: 'hidden', position: 'relative', p: '20px 30px' }}>
       <Widget>
@@ -37,10 +50,13 @@ const TracksCard:React.FC<Props> = ({track}) => {
             <Typography noWrap>
               <b>{track.album.artist.name}</b>
             </Typography>
-            <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
-              <Typography noWrap sx={{ letterSpacing: -0.25}}>
-                {track.number}. {track.title}
-              </Typography>
+            <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', flexWrap: 'wrap'}}>
+              <Box sx={{display: 'flex', alignItems: 'center'}}>
+                <PlayArrowRounded sx={{ fontSize: '30px', marginRight: '5px'}} onClick={() => getTrackHistory(track._id)}/>
+                <Typography noWrap sx={{ letterSpacing: -0.25}}>
+                  {track.number}. {track.title}
+                </Typography>
+              </Box>
               <Typography noWrap sx={{letterSpacing: -0.25, color: 'text.secondary', fontSize: 14 }}>
                 {track.trackDuration}
               </Typography>

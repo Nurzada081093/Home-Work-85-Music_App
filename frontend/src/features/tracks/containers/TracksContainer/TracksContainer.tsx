@@ -1,25 +1,37 @@
 import { useAppDispatch, useAppSelector } from '../../../../app/hooks.ts';
 import { SliceLoading, SliceTracks } from '../../tracksSlice.ts';
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getTracks } from '../../tracksThunk.ts';
 import { Container } from '@mui/material';
 import Typography from '@mui/joy/Typography';
 import Box from '@mui/material/Box';
 import TracksCard from '../../components/TracksCard/TracksCard.tsx';
 import Loading from '../../../../components/UI/Loading/Loading.tsx';
+import { userFromSlice } from '../../../users/usersSlice.ts';
+import { toast } from 'react-toastify';
 
 const TracksContainer = () => {
+  const user = useAppSelector(userFromSlice);
   const tracks = useAppSelector(SliceTracks);
   const loading = useAppSelector(SliceLoading);
   const dispatch = useAppDispatch();
   const {id} = useParams();
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     if (id) {
       dispatch(getTracks(id));
     }
   }, [dispatch, id]);
+
+  if (!user) {
+    setTimeout(() => {
+      toast.error(`You can not listen to ${tracks[0].album.title} album. If you want to listen please sign in!`);
+      navigate('/login');
+    }, 1000);
+  }
 
   return (
     <>
