@@ -5,6 +5,8 @@ import ArtistsContainer from './features/artists/containers/ArtistsContainer.tsx
 import AlbumsContainer from './features/albums/containers/AlbumsContainer/AlbumsContainer.tsx';
 import Typography from '@mui/joy/Typography';
 import TracksContainer from './features/tracks/containers/TracksContainer/TracksContainer.tsx';
+import RegisterContainer from './features/users/containers/RegisterContainer/RegisterContainer.tsx';
+import LoginContainer from './features/users/containers/LoginContainer/LoginContainer.tsx';
 
 const App = () => {
 
@@ -16,6 +18,8 @@ const App = () => {
       <main>
         <Routes>
           <Route path="/" element={<ArtistsContainer/>} />
+          <Route path="/register" element={<RegisterContainer/>} />
+          <Route path="/login" element={<LoginContainer/>} />
           <Route path="/albums/:id" element={<AlbumsContainer/>} />
           <Route path="/tracks/:id" element={<TracksContainer/>} />
           <Route path="*" element={<Typography textColor="success.plainColor" sx={{ fontWeight: 'md', fontSize: '30px' }}>

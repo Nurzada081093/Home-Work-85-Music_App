@@ -1,0 +1,116 @@
+import React, { useState } from 'react';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid2';
+import Box from '@mui/material/Box';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import { NavLink } from 'react-router-dom';
+import { Alert } from '@mui/material';
+import { UserLogin } from '../../../../types';
+import { useAppSelector } from '../../../../app/hooks.ts';
+import { loginErrorFromSlice } from '../../usersSlice.ts';
+import { toast } from 'react-toastify';
+
+interface Props {
+  login: (user: UserLogin) => void;
+}
+
+const initialUserState = {
+  username: '',
+  password: ''
+};
+
+const LoginForm: React.FC<Props> = ({login}) => {
+  const [loginForm, setLoginForm] = useState<UserLogin>(initialUserState);
+  const loginError = useAppSelector(loginErrorFromSlice);
+
+  const onChangeUser = (e: React.ChangeEvent<HTMLInputElement>)=> {
+    const {name, value} = e.target;
+
+    setLoginForm((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const submitUser = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (loginForm.username.trim().length === 0 && loginForm.password.trim().length === 0) {
+      toast.error("Fill in the username and password!");
+    } else {
+      login({...loginForm});
+    }
+  };
+
+  return (
+    <Container component="main" maxWidth="xs">
+      <Box
+        sx={{
+          marginTop: 4,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          backgroundColor: 'rgba(245,245,245,0.75)',
+          borderRadius: '10px',
+          padding: '30px 0',
+        }}
+      >
+        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <LockOpenIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Sign in
+        </Typography>
+        {loginError && (
+          <Alert severity="error" sx={{mt: 3, width: '80%'}}>
+            {loginError.error}
+          </Alert>
+        )}
+        <Box component="form" noValidate onSubmit={submitUser} sx={{ mt: 3 }}>
+          <Grid container direction={'column'} spacing={2}>
+            <Grid size={12}>
+              <TextField
+                fullWidth
+                id="username"
+                label="Username"
+                name="username"
+                onChange={onChangeUser}
+              />
+            </Grid>
+            <Grid size={12}>
+              <TextField
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                onChange={onChangeUser}
+              />
+            </Grid>
+          </Grid>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Sign In
+          </Button>
+          <Grid container justifyContent="flex-end">
+            <Grid size={12}>
+              <NavLink to={'/register'}>
+                No account yet? Sign Up
+              </NavLink>
+            </Grid>
+          </Grid>
+        </Box>
+      </Box>
+    </Container>
+  );
+};
+
+export default LoginForm;

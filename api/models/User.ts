@@ -1,4 +1,4 @@
-import mongoose, {Model} from "mongoose";
+import mongoose, {HydratedDocument, Model} from "mongoose";
 import bcrypt from "bcrypt";
 import {randomUUID} from "node:crypto";
 import {UserData} from "../types";
@@ -14,13 +14,14 @@ const Schema = mongoose.Schema;
 
 const  HASHING_PASSWORD = 10;
 
-const UserSchema = new Schema<UserData, UserModel, UserMethods>({
+const UserSchema = new Schema<HydratedDocument<UserData>, UserModel, UserMethods>({
     username: {
         type: String,
         required: [true, 'Username is required'],
         unique: true,
         validate: {
-            validator: async function (value: string): Promise<boolean> {
+            validator: async function (this:HydratedDocument<UserData> , value: string): Promise<boolean> {
+                if (!this.isModified('username')) return true;
                 const user: UserData | null = await User.findOne({username: value});
                 return !user;
             },
