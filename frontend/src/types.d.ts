@@ -19,6 +19,7 @@ export interface ITrack {
   title: string;
   trackDuration: string;
   number: number;
+  url: string;
 }
 
 export interface UserRegister {
@@ -37,7 +38,7 @@ export interface IUser {
   token: string;
 }
 
-export interface UserRegisterResponse {
+export interface UserLoginResponse {
   user: IUser;
   message: string;
 }

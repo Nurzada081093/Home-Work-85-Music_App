@@ -16,6 +16,7 @@ export interface ITrack {
     title: string;
     trackDuration: string;
     number: number;
+    url: string;
 }
 
 export interface UserData {

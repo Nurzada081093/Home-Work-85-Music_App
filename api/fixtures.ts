@@ -78,181 +78,211 @@ const run = async () => {
             album: EditionFrancaiseAlbum._id,
             title: 'Tides',
             trackDuration: '3:16',
-            number: 1
+            number: 1,
+            url: 'https://www.youtube.com/watch?v=P_kRTqaD8Mc'
         },
         {
             album: EditionFrancaiseAlbum._id,
             title: 'Shivers',
             trackDuration: '3:28',
-            number: 2
+            number: 2,
+            url: 'https://www.youtube.com/watch?v=Il0S8BoucSA'
         },
         {
             album: EditionFrancaiseAlbum._id,
             title: 'First Times',
             trackDuration: '3:06',
-            number: 3
+            number: 3,
+            url: 'https://www.youtube.com/watch?v=y6oryBG8xeQ'
         },
         {
             album: EditionFrancaiseAlbum._id,
             title: 'Bad Habits',
             trackDuration: '3:51',
-            number: 4
+            number: 4,
+            url: 'https://www.youtube.com/watch?v=orJSJGHjBLI'
         },
         {
             album: EditionFrancaiseAlbum._id,
             title: '2step',
             trackDuration: '2:34',
-            number: 5
+            number: 5,
+            url: 'https://www.youtube.com/watch?v=Z_MvkyuOJgk'
         },
         {
             album: XAlbum._id,
             title: 'Photograph',
             trackDuration: '4:16',
-            number: 1
+            number: 1,
+            url: 'https://www.youtube.com/watch?v=nSDgHBxUbVQ'
         },
         {
             album: XAlbum._id,
             title: 'Bloodstream',
             trackDuration: '5:00',
-            number: 2
+            number: 2,
+            url: 'https://www.youtube.com/watch?v=Vv-n0pgQ8zg'
         },
         {
             album: XAlbum._id,
             title: 'Don\'t',
             trackDuration: '3:39',
-            number: 3
+            number: 3,
+            url: 'https://www.youtube.com/watch?v=iD2rhdFRehU'
         },
         {
             album: XAlbum._id,
             title: 'Thinking Out Loud',
             trackDuration: '4:37',
-            number: 4
+            number: 4,
+            url: 'https://www.youtube.com/watch?v=lp-EO5I60KA'
         },
         {
             album: XAlbum._id,
             title: 'All of the Stars',
             trackDuration: '3:57',
-            number: 5
+            number: 5,
+            url: 'https://www.youtube.com/watch?v=nkqVm5aiC28'
         },
         {
             album: HotAlbum._id,
-            title: 'INNA - Hot (Play & Win Radio Version)',
+            title: 'Hot (Play & Win Radio Version)',
             trackDuration: '3:37',
-            number: 1
+            number: 1,
+            url: 'https://www.youtube.com/watch?v=Vh_3zdmaHbk'
         },
         {
             album: HotAlbum._id,
             title: 'Amazing',
             trackDuration: '3:27',
-            number: 2
+            number: 2,
+            url: 'https://www.youtube.com/watch?v=gKHe12T6GMY'
         },
         {
             album: HotAlbum._id,
             title: 'Don\'t Let the Music Die',
             trackDuration: '3:38',
-            number: 3
+            number: 3,
+            url: 'https://www.youtube.com/watch?v=L3EUJSRIC-4'
         },
         {
             album: HotAlbum._id,
             title: 'Deja Vu (Play & Win Radio Edit)',
             trackDuration: '4:21',
-            number: 4
+            number: 4,
+            url: 'https://www.youtube.com/watch?v=zr_c5rqvSg4'
         },
         {
             album: HotAlbum._id,
             title: 'On & On',
             trackDuration: '4:38',
-            number: 5
+            number: 5,
+            url: 'https://www.youtube.com/watch?v=S_D9UPJlKpE'
         },
         {
             album: ElPasadoAlbum._id,
             title: 'Primera Vez',
             trackDuration: '2:51',
-            number: 1
+            number: 1,
+            url: 'https://www.youtube.com/watch?v=iG-q8aDjfhY'
         },
         {
             album: ElPasadoAlbum._id,
             title: 'Enferma',
             trackDuration: '3:43',
-            number: 2
+            number: 2,
+            url: 'https://www.youtube.com/watch?v=fBedGAWqrmE'
         },
         {
             album: ElPasadoAlbum._id,
             title: 'Dame La Mano',
             trackDuration: '2:55',
-            number: 3
+            number: 3,
+            url: 'https://www.youtube.com/watch?v=Aiszg_6B6cw'
         },
         {
             album: ElPasadoAlbum._id,
             title: 'Cora',
             trackDuration: '2:51',
-            number: 4
+            number: 4,
+            url: 'https://www.youtube.com/watch?v=JAZxAsaNiv8'
         },
         {
             album: ElPasadoAlbum._id,
             title: 'LaLaLa',
             trackDuration: '2:32',
-            number: 5
+            number: 5,
+            url: 'https://www.youtube.com/watch?v=WaKWLdAXrFs'
         },
         {
             album: Adele21Album._id,
             title: 'Rolling in the Deep',
             trackDuration: '3:48',
-            number: 1
+            number: 1,
+            url: 'https://www.youtube.com/watch?v=rYEDA3JcQqw'
         },
         {
             album: Adele21Album._id,
             title: 'Set Fire to the Rain',
             trackDuration: '4:02',
-            number: 2
+            number: 2,
+            url: 'https://www.youtube.com/watch?v=1twUUM0KxDg'
         },
         {
             album: Adele21Album._id,
             title: 'Take It All',
             trackDuration: '3:48',
-            number: 3
+            number: 3,
+            url: 'https://www.youtube.com/watch?v=ELBQ_YYiTzs'
         },
         {
             album: Adele21Album._id,
             title: 'Someone Like You',
             trackDuration: '4:45',
-            number: 4
+            number: 4,
+            url: 'https://www.youtube.com/watch?v=hLQl3WQQoQ0'
         },
         {
             album: Adele21Album._id,
             title: 'He Won’t Go',
             trackDuration: '4:38',
-            number: 5
+            number: 5,
+            url: 'https://www.youtube.com/watch?v=Q78Rme59PTs'
         },
         {
             album: Adele25Album._id,
             title: 'Hello',
             trackDuration: '4:55',
-            number: 1
+            number: 1,
+            url: 'https://www.youtube.com/watch?v=YQHsXMglC9A'
         },
         {
             album: Adele25Album._id,
             title: 'Send My Love (To Your New Lover)',
             trackDuration: '3:43',
-            number: 2
+            number: 2,
+            url: 'https://www.youtube.com/watch?v=9KgKFtYit7s'
         },
         {
             album: Adele25Album._id,
             title: 'When We Were Young',
             trackDuration: '4:51',
-            number: 3
+            number: 3,
+            url: 'https://www.youtube.com/watch?v=DDWKuo3gXMQ'
         },
         {
             album: Adele25Album._id,
             title: 'Remedy',
             trackDuration: '4:05',
-            number: 5
+            number: 5,
+            url: 'https://www.youtube.com/watch?v=i4D3bVBB294'
         },
         {
             album: Adele25Album._id,
             title: 'Water Under the Bridge',
             trackDuration: '4:00',
-            number: 4
+            number: 4,
+            url: 'https://www.youtube.com/watch?v=5aTttdUDmvI'
         }
     );
 };

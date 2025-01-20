@@ -13,7 +13,7 @@ const initialState: ArtistsSlice = {
   artists: [],
   loading: false,
   error: false,
-}
+};
 
 export const SliceArtists = (state: RootState) => state.artists.artists;
 export const SliceLoading = (state: RootState) => state.artists.loading;

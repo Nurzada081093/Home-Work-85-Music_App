@@ -69,6 +69,7 @@ tracksRouter.post('/', async (req, res, next) => {
         title: req.body.title,
         trackDuration: req.body.trackDuration,
         number: req.body.number,
+        url: req.body.url,
     }
 
     try {

@@ -13,7 +13,7 @@ const initialState: TracksSlice = {
   tracks: [],
   loading: false,
   error: false,
-}
+};
 
 export const SliceTracks = (state: RootState) => state.tracks.tracks;
 export const SliceLoading = (state: RootState) => state.tracks.loading;

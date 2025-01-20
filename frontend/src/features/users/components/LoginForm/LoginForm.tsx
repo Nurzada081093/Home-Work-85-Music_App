@@ -8,10 +8,10 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { NavLink } from 'react-router-dom';
-import { Alert } from '@mui/material';
+import { Alert, CircularProgress } from '@mui/material';
 import { UserLogin } from '../../../../types';
 import { useAppSelector } from '../../../../app/hooks.ts';
-import { loginErrorFromSlice } from '../../usersSlice.ts';
+import { loginErrorFromSlice, loginLoadingFromSlice } from '../../usersSlice.ts';
 import { toast } from 'react-toastify';
 
 interface Props {
@@ -26,6 +26,7 @@ const initialUserState = {
 const LoginForm: React.FC<Props> = ({login}) => {
   const [loginForm, setLoginForm] = useState<UserLogin>(initialUserState);
   const loginError = useAppSelector(loginErrorFromSlice);
+  const loading = useAppSelector(loginLoadingFromSlice);
 
   const onChangeUser = (e: React.ChangeEvent<HTMLInputElement>)=> {
     const {name, value} = e.target;
@@ -93,12 +94,14 @@ const LoginForm: React.FC<Props> = ({login}) => {
             </Grid>
           </Grid>
           <Button
+            disabled={loading}
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
             Sign In
+            {loading ?  <CircularProgress size="30px" sx={{marginLeft: '20px'}}/> : null}
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid size={12}>

@@ -10,7 +10,8 @@ import { NavLink } from 'react-router-dom';
 import React, { useState } from 'react';
 import { UserRegister } from '../../../../types';
 import { useAppSelector } from '../../../../app/hooks.ts';
-import { registerErrorFromSlice } from '../../usersSlice.ts';
+import { registerErrorFromSlice, registerLoadingFromSlice } from '../../usersSlice.ts';
+import { CircularProgress } from '@mui/material';
 
 interface Props {
   register: (user: UserRegister) => void;
@@ -24,6 +25,7 @@ const initialUserState = {
 const RegisterForm: React.FC<Props> = ({register}) => {
   const [registerForm, setRegisterForm] = useState<UserRegister>(initialUserState);
   const registerError = useAppSelector(registerErrorFromSlice);
+  const loading = useAppSelector(registerLoadingFromSlice);
 
   const onChangeUser = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target;
@@ -93,12 +95,14 @@ const RegisterForm: React.FC<Props> = ({register}) => {
             </Grid>
           </Grid>
           <Button
+            disabled={loading}
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
             Sign Up
+            {loading ?  <CircularProgress size="30px" sx={{marginLeft: '20px'}}/> : null}
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid size={12}>

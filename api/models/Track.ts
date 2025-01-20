@@ -20,6 +20,10 @@ const TrackSchema = new Schema({
         type: Number,
         required: [true, 'Number is required'],
     },
+    url: {
+        type: String,
+        default: null,
+    },
 });
 
 const Track = mongoose.model('Track', TrackSchema);

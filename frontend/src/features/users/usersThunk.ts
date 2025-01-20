@@ -1,14 +1,14 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axiosRequest from '../../axiosRequest.ts';
-import { GlobalError, IUser, UserLogin, UserRegister, UserRegisterResponse, ValidationError } from '../../types';
+import { GlobalError, IUser, UserLogin, UserLoginResponse, UserRegister, ValidationError } from '../../types';
 import { isAxiosError } from 'axios';
 import { RootState } from '../../app/store.ts';
 
-export const registerUser = createAsyncThunk<UserRegisterResponse, UserRegister, {rejectValue: ValidationError}>(
+export const registerUser = createAsyncThunk<IUser, UserRegister, {rejectValue: ValidationError}>(
   'users/registerUser',
   async (user, {rejectWithValue}) => {
     try {
-      const response = await axiosRequest.post<UserRegisterResponse>('/users/register', {...user});
+      const response = await axiosRequest.post<IUser>('/users/register', {...user});
       return response.data;
     } catch (error) {
       if (isAxiosError(error) && error.response && error.response.status === 400) {
@@ -23,7 +23,7 @@ export const loginUser = createAsyncThunk<IUser, UserLogin, {rejectValue: Global
   'users/loginUser',
   async (user, {rejectWithValue}) => {
     try {
-      const response = await axiosRequest.post<UserRegisterResponse>('/users/sessions', {...user});
+      const response = await axiosRequest.post<UserLoginResponse>('/users/sessions', {...user});
       return response.data.user;
     } catch (error) {
       if (isAxiosError(error) && error.response && error.response.status === 400) {
