@@ -61,7 +61,7 @@ export interface GlobalError {
 export interface ITrackHistory {
   artist: IArtist;
   user: IUser;
-  track: string;
+  track: ITrack;
   _id: string;
   datetime: string;
 }

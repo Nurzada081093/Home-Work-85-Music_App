@@ -22,6 +22,7 @@ const initialState: trackHistoryState = {
 };
 
 export const trackHistoryFromSlice = (state: RootState) => state.trackHistories.trackHistories;
+export const getTrackHistoryLoadingFromSlice = (state: RootState) => state.trackHistories.loadings.addTrackHistory;
 
 const trackHistoriesSlice = createSlice({
   name: 'trackHistories',
