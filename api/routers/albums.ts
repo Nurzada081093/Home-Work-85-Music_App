@@ -3,7 +3,9 @@ import Album from "../models/Album";
 import {imagesUpload} from "../multer";
 import {IAlbum} from "../types";
 import Artist from "../models/Artist";
-import mongoose from "mongoose";
+import {Error} from "mongoose";
+import auth, {RequestWithUser} from "../middleware/auth";
+import permit from "../middleware/permit";
 
 const albumsRouter = express.Router();
 
@@ -39,7 +41,9 @@ albumsRouter.get('/:id', async (req, res, next) => {
     }
 });
 
-albumsRouter.post('/', imagesUpload.single('image'),  async (req, res, next) => {
+albumsRouter.post('/', imagesUpload.single('image'), auth, async (req, res, next) => {
+    let expressReq = req as RequestWithUser;
+    const user = expressReq.user;
 
     if (req.body.artist) {
         const artist = await Artist.findById(req.body.artist);
@@ -51,6 +55,7 @@ albumsRouter.post('/', imagesUpload.single('image'),  async (req, res, next) => 
     }
 
     const newAlbum: IAlbum = {
+        user,
         artist: req.body.artist,
         title: req.body.title,
         releaseDate: req.body.releaseDate,
@@ -63,13 +68,46 @@ albumsRouter.post('/', imagesUpload.single('image'),  async (req, res, next) => 
         res.send(album);
     } catch (error) {
 
-        if (error instanceof mongoose.Error.ValidationError) {
-            const ValidationErrors = Object.keys(error.errors).map((key) => ({
-                field: key,
-                message: error.errors[key].message,
-            }));
-            res.status(400).send({errors: ValidationErrors});
+        if (error instanceof Error.ValidationError) {
+            res.status(400).send(error);
+            return;
         }
+
+        next(error);
+    }
+});
+
+albumsRouter.delete("/:id", auth, permit('admin', 'user'), async (req, res, next) => {
+    let expressReq = req as RequestWithUser;
+    const albumId = expressReq.params.id;
+    const user = expressReq.user;
+
+    try {
+
+        const album = await Album.findById(albumId);
+
+        if (!album) {
+            res.status(404).send({error: 'This album not found!'});
+            return;
+        }
+
+        if (user._id.toString() === album.user._id.toString()) {
+            if (album.isPublished === false) {
+                await album.deleteOne();
+                res.send({message: "This album was successfully deleted by the user!"});
+                return;
+            }
+        }
+
+        if (user.role === 'admin') {
+            await album.deleteOne();
+            res.send({message: "This album was successfully deleted by admin!"});
+            return;
+        }
+
+        res.status(403).send({error: 'Your role is not admin! You don\'t have access to delete this album!'});
+
+    } catch (error) {
         next(error);
     }
 });

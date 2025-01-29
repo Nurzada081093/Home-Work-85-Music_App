@@ -4,6 +4,11 @@ import {IArtist} from "../types";
 const Schema = mongoose.Schema;
 
 const ArtistSchema = new Schema({
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: [true, 'User is required'],
+    },
     name: {
         type: String,
         required: [true, 'Name is required!'],
@@ -21,6 +26,10 @@ const ArtistSchema = new Schema({
         default: null,
     },
     image: String,
+    isPublished: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const Artist = mongoose.model('Artist', ArtistSchema);

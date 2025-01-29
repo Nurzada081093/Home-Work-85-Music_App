@@ -3,6 +3,11 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const TrackSchema = new Schema({
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: [true, 'User is required'],
+    },
     album: {
         type: Schema.Types.ObjectId,
         ref: 'Album',
@@ -23,6 +28,10 @@ const TrackSchema = new Schema({
     url: {
         type: String,
         default: null,
+    },
+    isPublished: {
+        type: Boolean,
+        default: false,
     },
 });
 

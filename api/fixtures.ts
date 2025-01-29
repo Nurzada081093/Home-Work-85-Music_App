@@ -3,6 +3,8 @@ import config from "./config";
 import Artist from "./models/Artist";
 import Album from "./models/Album";
 import Track from "./models/Track";
+import User from "./models/User";
+import {randomUUID} from "node:crypto";
 
 const run = async () => {
     await mongoose.connect(config.db);
@@ -12,22 +14,41 @@ const run = async () => {
         await db.dropCollection('artists');
         await db.dropCollection('albums');
         await db.dropCollection('tracks');
+        await db.dropCollection('users');
     } catch (e) {
         console.log('Collections were not presents, skipping drop!');
     }
 
+    const [userMolly, userSally] = await User.create(
+        {
+            username: 'Molly',
+            password: '123',
+            role: 'admin',
+            token: randomUUID(),
+        },
+        {
+            username: 'Sally',
+            password: '123',
+            role: 'user',
+            token: randomUUID(),
+        },
+    );
+
     const [EdSheeranArtist, InnaArtist, AdeleArtist] = await Artist.create(
         {
+            user: userMolly._id,
             name: 'Ed Sheeran',
             description: 'Edward Christopher Sheeran was born 17 February 1991. He is an English singer-songwriter. Born in Halifax, West Yorkshire, and raised in Framlingham, Suffolk, he began writing songs around the age of eleven. In early 2011, Sheeran independently released the extended play No. 5 Collaborations Project. He signed with Asylum Records the same year.',
             image: 'fixtures/Ed_Sheeran.jpg',
         },
         {
+            user: userSally._id,
             name: 'Inna',
             description: 'Elena Alexandra Apostoleanu (born 16 October 1986), known professionally as Inna, is a Romanian singer. Born in Mangalia and raised in Neptun, she studied political science at Ovidius University before meeting the Romanian trio Play & Win and pursuing a music career. She adopted the stage name "Alessandra" and a pop-rock style in 2008; later that year, she changed her stage name to "Inna" and began releasing EDM, house and popcorn music.',
             image: 'fixtures/Inna.jpg',
         },
         {
+            user: userSally._id,
             name: 'Adele',
             description: 'Adele Laurie Blue Adkins (born 5 May 1988), known mononymously as Adele, is an English singer-songwriter. Regarded as a British icon, she is known for her mezzo-soprano vocals and sentimental songwriting. Her accolades include 16 Grammy Awards, 12 Brit Awards (including three for British Album of the Year), an Academy Award, a Primetime Emmy Award, and a Golden Globe Award.',
             image: 'fixtures/Adele.jpg',
@@ -285,6 +306,7 @@ const run = async () => {
             url: 'https://www.youtube.com/watch?v=5aTttdUDmvI'
         }
     );
+
 };
 
 run().catch(console.error);

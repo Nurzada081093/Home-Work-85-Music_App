@@ -1,10 +1,19 @@
+export interface UserData {
+    username: string;
+    password: string;
+    role: string;
+    token: string;
+}
 export interface IArtist {
+    user: UserData;
     name: string;
     description: string;
     image: string | null;
+    isPublished: boolean;
 }
 
 export interface IAlbum {
+    user: UserData;
     artist: number;
     title: string;
     releaseDate: number;
@@ -12,6 +21,7 @@ export interface IAlbum {
 }
 
 export interface ITrack {
+    user: UserData;
     album: number;
     title: string;
     trackDuration: string;
@@ -19,8 +29,3 @@ export interface ITrack {
     url: string;
 }
 
-export interface UserData {
-    username: string;
-    password: string;
-    token: string;
-}

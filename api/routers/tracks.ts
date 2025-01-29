@@ -1,9 +1,11 @@
 import express from "express";
 import Album from "../models/Album";
-import mongoose from "mongoose";
+import {Error} from "mongoose";
 import {ITrack} from "../types";
 import Track from "../models/Track";
 import Artist from "../models/Artist";
+import auth, {RequestWithUser} from "../middleware/auth";
+import permit from "../middleware/permit";
 
 const tracksRouter = express.Router();
 
@@ -53,7 +55,9 @@ tracksRouter.get('/', async (req, res, next) => {
     }
 });
 
-tracksRouter.post('/', async (req, res, next) => {
+tracksRouter.post('/', auth, async (req, res, next) => {
+    let expressReq = req as RequestWithUser;
+    const user = expressReq.user;
 
     if (req.body.album) {
         const album = await Album.findById(req.body.album);
@@ -65,11 +69,13 @@ tracksRouter.post('/', async (req, res, next) => {
     }
 
     const newTrack: ITrack = {
+        user,
         album: req.body.album,
         title: req.body.title,
         trackDuration: req.body.trackDuration,
         number: req.body.number,
         url: req.body.url,
+
     }
 
     try {
@@ -78,13 +84,46 @@ tracksRouter.post('/', async (req, res, next) => {
         res.send(track);
     } catch (error) {
 
-        if (error instanceof mongoose.Error.ValidationError) {
-            const ValidationErrors = Object.keys(error.errors).map((key) => ({
-                field: key,
-                message: error.errors[key].message,
-            }));
-            res.status(400).send({errors: ValidationErrors});
+        if (error instanceof Error.ValidationError) {
+            res.status(400).send(error);
+            return;
         }
+
+        next(error);
+    }
+});
+
+tracksRouter.delete("/:id", auth, permit('admin', 'user'), async (req, res, next) => {
+    let expressReq = req as RequestWithUser;
+    const trackId = expressReq.params.id;
+    const user = expressReq.user;
+
+    try {
+
+        const track = await Track.findById(trackId);
+
+        if (!track) {
+            res.status(404).send({error: 'This track not found!'});
+            return;
+        }
+
+        if (user._id.toString() === track.user._id.toString()) {
+            if (track.isPublished === false) {
+                await track.deleteOne();
+                res.send({message: "This track was successfully deleted by the user!"});
+                return;
+            }
+        }
+
+        if (user.role === 'admin') {
+            await track.deleteOne();
+            res.send({message: "This track was successfully deleted by admin!"});
+            return;
+        }
+
+        res.status(403).send({error: 'Your role is not admin! You don\'t have access to delete this track!'});
+
+    } catch (error) {
         next(error);
     }
 });
