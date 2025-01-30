@@ -23,3 +23,10 @@ export const deleteTrack = createAsyncThunk<void, {trackId: string, token: strin
     await axiosRequest.delete(`/tracks/${trackId}`, {headers: {'Authorization': token}});
   }
 );
+
+export const publishTrack = createAsyncThunk<void, {trackId: string, token: string}>(
+  'tracks/publishTrack',
+  async ({trackId, token}) => {
+    await axiosRequest.patch(`/tracks/${trackId}/togglePublished`, {headers: {'Authorization': token}});
+  }
+);

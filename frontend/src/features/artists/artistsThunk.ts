@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axiosRequest from '../../axiosRequest.ts';
-import { IArtist, IArtistMutation } from '../../types';
+import { IArtist, IArtistMutation, ValidationError } from '../../types';
+import { isAxiosError } from 'axios';
 
 export const getArtists = createAsyncThunk<IArtist[],void>(
   'artists/getArtists',
@@ -10,22 +11,29 @@ export const getArtists = createAsyncThunk<IArtist[],void>(
   }
 );
 
-export const addArtist = createAsyncThunk<void, {artist: IArtistMutation, token: string }>(
+export const addArtist = createAsyncThunk<void, {artist: IArtistMutation, token: string }, {rejectValue: ValidationError}>(
   "artists/addArtist",
-  async ({artist, token}) => {
-    const formData = new FormData();
+  async ({artist, token}, {rejectWithValue}) => {
+    try {
+      const formData = new FormData();
 
-    const keys = Object.keys(artist) as (keyof IArtistMutation)[];
+      const keys = Object.keys(artist) as (keyof IArtistMutation)[];
 
-    keys.forEach((key) => {
-      const value = artist[key];
+      keys.forEach((key) => {
+        const value = artist[key];
 
-      if (value !== null) {
-        formData.append(key, value);
+        if (value !== null) {
+          formData.append(key, value);
+        }
+      });
+
+      await axiosRequest.post('/artists', formData, {headers: {'Authorization': token}});
+    } catch (error) {
+      if (isAxiosError(error) && error.response && error.response.status === 400) {
+        return rejectWithValue(error.response.data);
       }
-    });
-
-    await axiosRequest.post('/artists', formData, {headers: {'Authorization': token}});
+      throw error;
+    }
   },
 );
 
@@ -33,5 +41,12 @@ export const deleteArtist = createAsyncThunk<void, {artistId: string, token: str
   'artists/deleteArtist',
   async ({artistId, token}) => {
     await axiosRequest.delete(`/artists/${artistId}`, {headers: {'Authorization': token}});
+  }
+);
+
+export const publishArtist = createAsyncThunk<void, {artistId: string, token: string}>(
+  'artists/publishArtist',
+  async ({artistId, token}) => {
+    await axiosRequest.patch(`/artists/${artistId}/togglePublished`, {headers: {'Authorization': token}});
   }
 );

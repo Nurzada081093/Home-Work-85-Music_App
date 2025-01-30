@@ -1,15 +1,17 @@
 import { Button, Menu, MenuItem } from '@mui/material';
 import React, { useState } from 'react';
-import { useAppDispatch } from '../../../app/hooks.ts';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks.ts';
 import { logoutUser } from '../../../features/users/usersThunk.ts';
-import { clearUser } from '../../../features/users/usersSlice.ts';
+import { clearUser, userFromSlice } from '../../../features/users/usersSlice.ts';
 import { AccountCircle } from '@mui/icons-material';
 import Box from '@mui/material/Box';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 const UserMenu = () => {
+  const user = useAppSelector(userFromSlice);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -39,8 +41,9 @@ const UserMenu = () => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem>Profile</MenuItem>
-        <MenuItem>My account</MenuItem>
+        {user && user.role === 'admin' && <MenuItem onClick={() => {
+          navigate('/admin');setAnchorEl(null);
+        }}>Admin</MenuItem>}
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
     </Box>

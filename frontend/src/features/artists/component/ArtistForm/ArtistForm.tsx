@@ -6,7 +6,7 @@ import FileInput from '../../../../components/FileInput/FileInput.tsx';
 import { IArtistMutation } from '../../../../types';
 import { toast } from 'react-toastify';
 import { useAppSelector } from '../../../../app/hooks.ts';
-import { SliceLoadingAdd } from '../../artistsSlice.ts';
+import { SliceAddError, SliceLoadingAdd } from '../../artistsSlice.ts';
 import ButtonSpinner from '../../../../components/UI/ButtonSpinner/ButtonSpinner.tsx';
 
 interface Props {
@@ -22,6 +22,7 @@ const initialState = {
 const ArtistForm:React.FC<Props> = ({addNewArtist}) => {
   const [newArtist, setNewArtist] = useState<IArtistMutation>(initialState);
   const loading = useAppSelector(SliceLoadingAdd);
+  const addError = useAppSelector(SliceAddError);
 
   const onSubmit = (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -54,6 +55,14 @@ const ArtistForm:React.FC<Props> = ({addNewArtist}) => {
     }
   };
 
+  const getError = (fieldName: string) => {
+    try {
+      return addError?.errors[fieldName].message;
+    } catch {
+      return undefined;
+    }
+  };
+
   return (
     <form onSubmit={onSubmit} style={{
       width: '50%',
@@ -75,6 +84,8 @@ const ArtistForm:React.FC<Props> = ({addNewArtist}) => {
             variant="outlined"
             value={newArtist.name}
             onChange={onChange}
+            error={Boolean(getError('name'))}
+            helperText={getError('name')}
           />
         </Grid>
         <Grid size={12}>

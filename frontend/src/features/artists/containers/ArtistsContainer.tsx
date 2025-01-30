@@ -9,6 +9,7 @@ import Loading from '../../../components/UI/Loading/Loading.tsx';
 import Typography from '@mui/joy/Typography';
 import { IArtist } from '../../../types';
 import { userFromSlice } from '../../users/usersSlice.ts';
+import { useNavigate } from 'react-router-dom';
 
 const ArtistsContainer = () => {
   const allArtists = useAppSelector(SliceArtists);
@@ -17,6 +18,7 @@ const ArtistsContainer = () => {
   const dispatch = useAppDispatch();
   const publishedArtists:IArtist[] = [];
   const noPublishedArtists:IArtist[] = [];
+  const navigate = useNavigate();
 
   allArtists.forEach((artist) => {
     if (artist.isPublished) {
@@ -30,7 +32,11 @@ const ArtistsContainer = () => {
 
   useEffect(() => {
     dispatch(getArtists());
-  }, [dispatch]);
+
+    if (user && user.role === 'admin') {
+      navigate('/admin');
+    }
+  }, [dispatch, navigate, user]);
 
   return (
     <>

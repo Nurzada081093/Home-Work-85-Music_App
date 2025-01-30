@@ -12,7 +12,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import { getArtists } from '../../../../artists/artistsThunk.ts';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { deleteTrack } from '../../../tracksThunk.ts';
+import { deleteTrack, publishTrack } from '../../../tracksThunk.ts';
+import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
 
 const Widget = styled('div')(({ theme }) => ({
   padding: 16,
@@ -54,23 +55,65 @@ const TracksCard:React.FC<Props> = ({track}) => {
     }
   };
 
+  const publishedAdminTheTrack = async (trackId: string) => {
+    if (user && user.role === 'admin') {
+      await dispatch(publishTrack({trackId, token: user.token})).unwrap();
+      await dispatch(getArtists());
+      toast.success('Track was successfully published!');
+      navigate('/admin');
+    }
+  };
+
+  const deleteAdminTheTrack = async (trackId: string) => {
+    if (user && user.role === 'admin') {
+      await dispatch(deleteTrack({trackId, token: user.token}));
+      await dispatch(getArtists());
+      toast.success('Track was successfully deleted!');
+      navigate('/admin');
+    }
+  };
+
   return (
     <>
-      <ModalWindow openModal={open} closeModal={() => setOpen(false)} track={track}/>
+      {track.url && (
+        <ModalWindow openModal={open} closeModal={() => setOpen(false)} track={track}/>
+      )}
       <Box sx={{ width: '100%', overflow: 'hidden', position: 'relative', p: '20px 30px' }}>
         <Widget>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ width: '100%'}}>
-              {!track.isPublished ?
-                <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                  <Typography
-                    variant="caption"
-                    sx={{ color: 'rgba(243,8,79,0.79)', fontWeight: 500 }}
-                  >
-                    No published
-                  </Typography>
-                  <CloseIcon sx={{fontSize: 'medium'}} onClick={() => deleteTheTrack(track._id)}/>
-                </Box> : null
+              {user && user.role !== 'admin' ?
+              <>
+                {!track.isPublished ?
+                  <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                    <Typography
+                      variant="caption"
+                      sx={{ color: 'rgba(243,8,79,0.79)', fontWeight: 500 }}
+                    >
+                      No published
+                    </Typography>
+                    <CloseIcon sx={{fontSize: 'medium'}} onClick={() => deleteTheTrack(track._id)}/>
+                  </Box> : null
+                }
+              </> :
+                <>
+                  {
+                    <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                      {!track.isPublished && (
+                        <Typography
+                          variant="caption"
+                          sx={{ color: 'rgb(4,105,159)', fontWeight: 500 }}
+                        >
+                          No published
+                        </Typography>
+                      )}
+                      <Box sx={{marginLeft: 'auto'}}>
+                        <PublishedWithChangesIcon sx={{fontSize: 'medium'}} onClick={() => publishedAdminTheTrack(track._id)}/>
+                        <CloseIcon sx={{fontSize: 'medium', marginLeft: '10px'}} onClick={() => deleteAdminTheTrack(track._id)}/>
+                      </Box>
+                    </Box>
+                  }
+                </>
               }
               <Typography
                 variant="caption"

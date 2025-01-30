@@ -132,7 +132,7 @@ tracksRouter.patch("/:id/togglePublished", auth, permit('admin'), async (req, re
     const trackId = expressReq.params.id;
 
     try {
-        const track = await Artist.findById(trackId);
+        const track = await Track.findById(trackId);
 
         if (!track) {
             res.status(404).send({error: 'This track not found!'});

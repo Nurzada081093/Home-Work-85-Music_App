@@ -56,15 +56,23 @@ const TracksContainer = () => {
             </Box>
           )}
           <Box sx={{border: '1px solid white', width: '40%', borderRadius: '10px', margin: '30px auto 50px'}}>
-            {publishedTracks.length > 0 ?
-              <TrackCards tracks={publishedTracks}/> :
-              <Typography level="h2" sx={{textAlign: 'center', margin: '40px 0', color: 'whitesmoke', fontSize: '40px'}}>No published tracks yet!</Typography>
-            }
-            {noPublishedTracks.length > 0 ?
-              <TrackCards tracks={noPublishedTracks}/> : null
+            {user && user.role !== 'admin' ?
+              <>
+                {publishedTracks.length > 0 ?
+                  <TrackCards tracks={publishedTracks}/> :
+                  <Typography level="h2" sx={{textAlign: 'center', margin: '40px 0', color: 'whitesmoke', fontSize: '40px'}}>No published tracks yet!</Typography>
+                }
+                {noPublishedTracks.length > 0 ?
+                  <TrackCards tracks={noPublishedTracks}/> : null
+                }
+              </> :
+              <>
+                {tracks.length > 0 ? <TrackCards tracks={tracks}/> :
+                  <Typography level="h2" sx={{textAlign: 'center', margin: '40px 0', color: 'whitesmoke', fontSize: '40px'}}>No tracks yet!</Typography>
+                }
+              </>
             }
           </Box>
-
         </Container>
       }
     </>

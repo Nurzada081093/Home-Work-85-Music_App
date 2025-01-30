@@ -13,7 +13,7 @@ import { toast } from 'react-toastify';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import { getArtists } from '../../../../artists/artistsThunk.ts';
-import { deleteAlbum } from '../../../albumsThunk.ts';
+import { deleteAlbum, publishAlbum } from '../../../albumsThunk.ts';
 
 interface Props {
   album: IAlbum;
@@ -47,8 +47,32 @@ const AlbumsCard:React.FC<Props> = ({album}) => {
     }
   };
 
+  const publishedAdminThisAlbum = async (albumId: string) => {
+    if (user && user.role === 'admin') {
+      await dispatch(publishAlbum({albumId, token: user.token})).unwrap();
+      await dispatch(getArtists());
+      toast.success('Album was successfully published!');
+      navigate('/admin');
+    }
+  };
+
+  const deleteAdminThisAlbum = async (albumId: string) => {
+    if (user && user.role === 'admin') {
+      await dispatch(deleteAlbum({albumId, token: user.token}));
+      await dispatch(getArtists());
+      toast.success('Album was successfully deleted!');
+      navigate('/admin');
+    }
+  };
+
   return (
     <Card sx={{ width: "260px", margin: '20px 0'}} onClick={() => getTracks(album._id)}>
+      {user && (user.role === 'admin' && !album.isPublished) && (
+        <Typography level="body-md" sx={{color: 'red'}}>
+          No published
+        </Typography>
+      )}
+
       <AspectRatio minHeight="300px" maxHeight="350px">
         <img
           style={{width: '230px'}}
@@ -64,14 +88,27 @@ const AlbumsCard:React.FC<Props> = ({album}) => {
           <Typography level="body-md">
             Release: {album.releaseDate}
           </Typography>
-          {!album.isPublished ?
+          {user && user.role !== 'admin' ?
+          <>
+            {!album.isPublished ?
             <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '5px'}}>
               <Typography level="body-md" sx={{color: 'red'}}>
                 No published
               </Typography>
               <Button variant="outlined" onClick={() => deleteThisAlbum(album._id)}>Delete</Button>
             </Box>
-             : null
+            : null
+            }
+          </> :
+            <>
+              {user && user.role === 'admin' ?
+                <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px'}}>
+                  <Button variant="outlined" onClick={() => publishedAdminThisAlbum(album._id)}>Publish</Button>
+                  <Button variant="outlined" onClick={() => deleteAdminThisAlbum(album._id)}>Delete</Button>
+                </Box>
+                : null
+              }
+            </>
           }
         </div>
       </CardContent>

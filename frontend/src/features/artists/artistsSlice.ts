@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { IArtist } from '../../types';
-import { addArtist, deleteArtist, getArtists } from './artistsThunk.ts';
+import { IArtist, ValidationError } from '../../types';
+import { addArtist, deleteArtist, getArtists, publishArtist } from './artistsThunk.ts';
 import { RootState } from '../../app/store.ts';
 
 interface ArtistsSlice {
@@ -9,8 +9,10 @@ interface ArtistsSlice {
     getLoading: boolean;
     addLoading: boolean;
     deleteLoading: boolean;
+    publishLoading: boolean;
   };
   error: boolean;
+  addError: ValidationError | null;
 }
 
 const initialState: ArtistsSlice = {
@@ -19,13 +21,16 @@ const initialState: ArtistsSlice = {
     getLoading: false,
     addLoading: false,
     deleteLoading: false,
+    publishLoading: false,
   },
   error: false,
+  addError: null,
 };
 
 export const SliceArtists = (state: RootState) => state.artists.artists;
 export const SliceLoading = (state: RootState) => state.artists.loadings.getLoading;
 export const SliceLoadingAdd = (state: RootState) => state.artists.loadings.addLoading;
+export const SliceAddError = (state: RootState) => state.artists.addError;
 
 const artistsSlice = createSlice({
   name: 'artists',
@@ -48,15 +53,15 @@ const artistsSlice = createSlice({
       })
       .addCase(addArtist.pending, (state) => {
         state.loadings.addLoading = true;
-        state.error = false;
+        state.addError = null;
       })
       .addCase(addArtist.fulfilled, (state) => {
         state.loadings.addLoading = false;
-        state.error = false;
+        state.addError = null;
       })
-      .addCase(addArtist.rejected, (state) => {
+      .addCase(addArtist.rejected, (state, {payload: error}) => {
         state.loadings.addLoading = false;
-        state.error = true;
+        state.addError = error || null;
       })
       .addCase(deleteArtist.pending, (state) => {
         state.loadings.deleteLoading = true;
@@ -68,6 +73,18 @@ const artistsSlice = createSlice({
       })
       .addCase(deleteArtist.rejected, (state) => {
         state.loadings.deleteLoading = false;
+        state.error = true;
+      })
+      .addCase(publishArtist.pending, (state) => {
+        state.loadings.publishLoading = true;
+        state.error = false;
+      })
+      .addCase(publishArtist.fulfilled, (state) => {
+        state.loadings.publishLoading = false;
+        state.error = false;
+      })
+      .addCase(publishArtist.rejected, (state) => {
+        state.loadings.publishLoading = false;
         state.error = true;
       });
   }

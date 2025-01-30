@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ITrack } from '../../types';
-import { addTrack, deleteTrack, getTracks } from './tracksThunk.ts';
+import { addTrack, deleteTrack, getTracks, publishTrack } from './tracksThunk.ts';
 import { RootState } from '../../app/store.ts';
 
 interface TracksSlice {
@@ -9,6 +9,7 @@ interface TracksSlice {
     getTracksLoading: boolean;
     addTrackLoading:  boolean;
     deleteTrackLoading: boolean;
+    publishedTrackLoading: boolean;
   };
   error: boolean;
 }
@@ -19,6 +20,7 @@ const initialState: TracksSlice = {
     getTracksLoading: false,
     addTrackLoading:  false,
     deleteTrackLoading: false,
+    publishedTrackLoading: false,
   },
   error: false,
 };
@@ -68,6 +70,18 @@ const tracksSlice = createSlice({
       })
       .addCase(deleteTrack.rejected, (state) => {
         state.loadings.deleteTrackLoading = false;
+        state.error = true;
+      })
+      .addCase(publishTrack.pending, (state) => {
+        state.loadings.publishedTrackLoading = true;
+        state.error = false;
+      })
+      .addCase(publishTrack.fulfilled, (state) => {
+        state.loadings.publishedTrackLoading = false;
+        state.error = false;
+      })
+      .addCase(publishTrack.rejected, (state) => {
+        state.loadings.publishedTrackLoading = false;
         state.error = true;
       });
   }

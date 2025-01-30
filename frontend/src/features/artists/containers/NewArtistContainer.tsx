@@ -11,9 +11,9 @@ const NewArtistContainer = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const addNewArtist = (artist: IArtistMutation) => {
+  const addNewArtist = async (artist: IArtistMutation) => {
     if (user !== null) {
-      dispatch(addArtist({artist, token: user.token}));
+      await dispatch(addArtist({artist, token: user.token})).unwrap();
       toast.success('Artist was successfully added!');
       navigate('/artists');
     } else {

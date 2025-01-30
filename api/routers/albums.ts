@@ -117,7 +117,7 @@ albumsRouter.patch("/:id/togglePublished", auth, permit('admin'), async (req, re
     const albumId = expressReq.params.id;
 
     try {
-        const album = await Artist.findById(albumId);
+        const album = await Album.findById(albumId);
 
         if (!album) {
             res.status(404).send({error: 'This album not found!'});

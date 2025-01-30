@@ -15,6 +15,7 @@ import { useAppSelector } from './app/hooks.ts';
 import { userFromSlice } from './features/users/usersSlice.ts';
 import NewAlbumContainer from './features/albums/containers/NewAlbumContainer.tsx';
 import NewTrackContainer from './features/tracks/containers/NewTrackContainer.tsx';
+import AdminContainer from './features/admin/containers/AdminContainer.tsx';
 
 const App = () => {
   const user = useAppSelector(userFromSlice);
@@ -47,7 +48,13 @@ const App = () => {
               <NewTrackContainer/>
             </ProtectedRoute>
           } />
+          <Route path="/admin" element={
+            <ProtectedRoute isAllowed={user && user.role === 'admin'}>
+              <AdminContainer/>
+            </ProtectedRoute>
+          }/>
           <Route path="/trackHistory" element={<TrackHistoryContainer/>} />
+
           <Route path="*" element={<Typography textColor="success.plainColor" sx={{ fontWeight: 'md', fontSize: '30px' }}>
             Not found
           </Typography>} />
