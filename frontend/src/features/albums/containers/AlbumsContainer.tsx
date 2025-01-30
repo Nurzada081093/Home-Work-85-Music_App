@@ -39,7 +39,21 @@ const AlbumsContainer = () => {
     <>
       {loading ? <Loading/> :
         <Container>
-          {user && user.role === 'admin' ? <AlbumsCards albums={albums} /> :
+          {user && user.role === 'admin' ?
+            <>
+              {albums.length > 0 ?
+                <>
+                  {albums && albums.length > 0 && (
+                    <>
+                      <Typography level="h1" sx={{textAlign: 'center', margin: '20px 0', color: 'whitesmoke', fontSize: '40px'}}>{albums[0].artist.name}</Typography>
+                      <AlbumsCards albums={albums} />
+                    </>
+                  )}
+                </> :
+                <Typography level="h1" sx={{textAlign: 'center', margin: '15% 0', color: 'whitesmoke', fontSize: '40px'}}>No albums yet!</Typography>
+              }
+            </>
+            :
           <>
             {albums && albums.length > 0 && (<Typography level="h1" sx={{textAlign: 'center', margin: '20px 0', color: 'whitesmoke', fontSize: '40px'}}>{albums[0].artist.name}</Typography>)}
             {publishedAlbums.length > 0 ? <AlbumsCards albums={publishedAlbums} /> : <Typography level="h1" sx={{textAlign: 'center', margin: '30px 0', color: 'whitesmoke', fontSize: '40px'}}>No published albums yet!</Typography>}
