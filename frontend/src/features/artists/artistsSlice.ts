@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { IArtist } from '../../types';
-import { addArtist, getArtists } from './artistsThunk.ts';
+import { addArtist, deleteArtist, getArtists } from './artistsThunk.ts';
 import { RootState } from '../../app/store.ts';
 
 interface ArtistsSlice {
@@ -56,6 +56,18 @@ const artistsSlice = createSlice({
       })
       .addCase(addArtist.rejected, (state) => {
         state.loadings.addLoading = false;
+        state.error = true;
+      })
+      .addCase(deleteArtist.pending, (state) => {
+        state.loadings.deleteLoading = true;
+        state.error = false;
+      })
+      .addCase(deleteArtist.fulfilled, (state) => {
+        state.loadings.deleteLoading = false;
+        state.error = false;
+      })
+      .addCase(deleteArtist.rejected, (state) => {
+        state.loadings.deleteLoading = false;
         state.error = true;
       });
   }

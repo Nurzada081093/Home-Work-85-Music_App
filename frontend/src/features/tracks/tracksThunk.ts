@@ -16,3 +16,10 @@ export const addTrack = createAsyncThunk<void, {track: ITrackMutation, token: st
     await axiosRequest.post('tracks', {...track}, {headers: {'Authorization': token}});
   }
 );
+
+export const deleteTrack = createAsyncThunk<void, {trackId: string, token: string}>(
+  'tracks/deleteTrack',
+  async ({trackId, token}) => {
+    await axiosRequest.delete(`/tracks/${trackId}`, {headers: {'Authorization': token}});
+  }
+);

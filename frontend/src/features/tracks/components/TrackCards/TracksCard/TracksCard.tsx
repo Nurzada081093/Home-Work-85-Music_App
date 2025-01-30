@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { ITrack } from '../../../../types';
+import { ITrack } from '../../../../../types';
 import { styled } from '@mui/joy';
 import PlayArrowRounded from '@mui/icons-material/PlayArrowRounded';
-import { useAppDispatch, useAppSelector } from '../../../../app/hooks.ts';
-import { userFromSlice } from '../../../users/usersSlice.ts';
-import { addTrackHistory } from '../../../trackHistories/trackHistoriesThunk.ts';
-import ModalWindow from '../../../../components/ModalWindow/ModalWindow.tsx';
+import { useAppDispatch, useAppSelector } from '../../../../../app/hooks.ts';
+import { userFromSlice } from '../../../../users/usersSlice.ts';
+import { addTrackHistory } from '../../../../trackHistories/trackHistoriesThunk.ts';
+import ModalWindow from '../../../../../components/ModalWindow/ModalWindow.tsx';
+import CloseIcon from '@mui/icons-material/Close';
+import { getArtists } from '../../../../artists/artistsThunk.ts';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { deleteTrack } from '../../../tracksThunk.ts';
 
 const Widget = styled('div')(({ theme }) => ({
   padding: 16,
@@ -31,11 +36,21 @@ const TracksCard:React.FC<Props> = ({track}) => {
   const [open, setOpen] = useState<boolean>(false);
   const user = useAppSelector(userFromSlice);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const getTrackHistory = (trackId: string) => {
     if (user) {
       setOpen(true);
       dispatch(addTrackHistory({track: trackId, token: user.token}));
+    }
+  };
+
+  const deleteTheTrack = async (trackId: string) => {
+    if (user) {
+      await dispatch(deleteTrack({trackId, token: user.token}));
+      await dispatch(getArtists());
+      toast.success('Track was successfully deleted!');
+      navigate('/');
     }
   };
 
@@ -46,6 +61,17 @@ const TracksCard:React.FC<Props> = ({track}) => {
         <Widget>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ width: '100%'}}>
+              {!track.isPublished ?
+                <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: 'rgba(243,8,79,0.79)', fontWeight: 500 }}
+                  >
+                    No published
+                  </Typography>
+                  <CloseIcon sx={{fontSize: 'medium'}} onClick={() => deleteTheTrack(track._id)}/>
+                </Box> : null
+              }
               <Typography
                 variant="caption"
                 sx={{ color: 'text.secondary', fontWeight: 500 }}

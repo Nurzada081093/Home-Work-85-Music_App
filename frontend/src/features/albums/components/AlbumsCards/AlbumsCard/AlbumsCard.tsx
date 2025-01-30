@@ -7,9 +7,13 @@ import Typography from '@mui/joy/Typography';
 import noImageAvailable from '../../../../../assets/noImageAvailable.png';
 import { apiUrl } from '../../../../../globalConstants.ts';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '../../../../../app/hooks.ts';
+import { useAppDispatch, useAppSelector } from '../../../../../app/hooks.ts';
 import { userFromSlice } from '../../../../users/usersSlice.ts';
 import { toast } from 'react-toastify';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import { getArtists } from '../../../../artists/artistsThunk.ts';
+import { deleteAlbum } from '../../../albumsThunk.ts';
 
 interface Props {
   album: IAlbum;
@@ -18,6 +22,7 @@ interface Props {
 const AlbumsCard:React.FC<Props> = ({album}) => {
   const user = useAppSelector(userFromSlice);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   let albumImage = noImageAvailable;
 
   if (album.image) {
@@ -30,6 +35,15 @@ const AlbumsCard:React.FC<Props> = ({album}) => {
     } else {
       toast.error(`You can not listen to ${album.title} album. If you want to listen please sign in!`);
       navigate(`/login`);
+    }
+  };
+
+  const deleteThisAlbum = async (albumId: string) => {
+    if (user) {
+      await dispatch(deleteAlbum({albumId, token: user.token}));
+      await dispatch(getArtists());
+      toast.success('Album was successfully deleted!');
+      navigate('/');
     }
   };
 
@@ -50,6 +64,15 @@ const AlbumsCard:React.FC<Props> = ({album}) => {
           <Typography level="body-md">
             Release: {album.releaseDate}
           </Typography>
+          {!album.isPublished ?
+            <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '5px'}}>
+              <Typography level="body-md" sx={{color: 'red'}}>
+                No published
+              </Typography>
+              <Button variant="outlined" onClick={() => deleteThisAlbum(album._id)}>Delete</Button>
+            </Box>
+             : null
+          }
         </div>
       </CardContent>
     </Card>

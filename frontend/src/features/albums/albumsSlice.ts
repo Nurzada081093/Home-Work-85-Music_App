@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { IAlbum } from '../../types';
-import { addAlbum, getAlbums } from './albumsThunk.ts';
+import { addAlbum, deleteAlbum, getAlbums } from './albumsThunk.ts';
 import { RootState } from '../../app/store.ts';
 
 interface AlbumsSlice {
@@ -58,6 +58,18 @@ const albumsSlice = createSlice({
       })
       .addCase(addAlbum.rejected, (state) => {
         state.loadings.addAlbumLoading = false;
+        state.error = true;
+      })
+      .addCase(deleteAlbum.pending, (state) => {
+        state.loadings.deleteAlbumLoading = true;
+        state.error = false;
+      })
+      .addCase(deleteAlbum.fulfilled, (state) => {
+        state.loadings.deleteAlbumLoading = false;
+        state.error = false;
+      })
+      .addCase(deleteAlbum.rejected, (state) => {
+        state.loadings.deleteAlbumLoading = false;
         state.error = true;
       });
   }

@@ -28,3 +28,10 @@ export const addAlbum = createAsyncThunk<void, {album: IAlbumMutation, token: st
     await axiosRequest.post('/albums', formData, {headers: {'Authorization': token}});
   },
 );
+
+export const deleteAlbum = createAsyncThunk<void, {albumId: string, token: string}>(
+  'albums/deleteAlbum',
+  async ({albumId, token}) => {
+    await axiosRequest.delete(`/albums/${albumId}`, {headers: {'Authorization': token}});
+  }
+);
