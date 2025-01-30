@@ -78,4 +78,25 @@ artistsRouter.delete("/:id", auth, permit('admin', 'user'), async (req, res, nex
     }
 });
 
+artistsRouter.patch("/:id/togglePublished", auth, permit('admin'), async (req, res, next) => {
+    let expressReq = req as RequestWithUser;
+    const artistId = expressReq.params.id;
+
+    try {
+        const artist = await Artist.findById(artistId);
+
+        if (!artist) {
+            res.status(404).send({error: 'This artist not found!'});
+            return;
+        }
+
+        artist.isPublished = !artist.isPublished;
+
+        await artist.save({validateModifiedOnly: true});
+        res.send(artist);
+    } catch (error) {
+        next(error);
+    }
+});
+
 export default artistsRouter;

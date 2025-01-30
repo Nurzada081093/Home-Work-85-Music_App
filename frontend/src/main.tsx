@@ -7,6 +7,9 @@ import { BrowserRouter } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import { addInterceptors } from './axiosRequest.ts';
+
+addInterceptors(store);
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>

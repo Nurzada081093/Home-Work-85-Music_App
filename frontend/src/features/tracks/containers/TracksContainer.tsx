@@ -1,14 +1,14 @@
-import { useAppDispatch, useAppSelector } from '../../../../app/hooks.ts';
-import { SliceLoading, SliceTracks } from '../../tracksSlice.ts';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks.ts';
+import { SliceLoading, SliceTracks } from '../tracksSlice.ts';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getTracks } from '../../tracksThunk.ts';
+import { getTracks } from '../tracksThunk.ts';
 import { Container } from '@mui/material';
 import Typography from '@mui/joy/Typography';
 import Box from '@mui/material/Box';
-import TracksCard from '../../components/TracksCard/TracksCard.tsx';
-import Loading from '../../../../components/UI/Loading/Loading.tsx';
-import { userFromSlice } from '../../../users/usersSlice.ts';
+import TracksCard from '../components/TracksCard/TracksCard.tsx';
+import Loading from '../../../components/UI/Loading/Loading.tsx';
+import { userFromSlice } from '../../users/usersSlice.ts';
 import { toast } from 'react-toastify';
 
 const TracksContainer = () => {

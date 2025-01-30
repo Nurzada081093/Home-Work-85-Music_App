@@ -74,8 +74,7 @@ tracksRouter.post('/', auth, async (req, res, next) => {
         title: req.body.title,
         trackDuration: req.body.trackDuration,
         number: req.body.number,
-        url: req.body.url,
-
+        url: req.body.url || null,
     }
 
     try {
@@ -123,6 +122,27 @@ tracksRouter.delete("/:id", auth, permit('admin', 'user'), async (req, res, next
 
         res.status(403).send({error: 'Your role is not admin! You don\'t have access to delete this track!'});
 
+    } catch (error) {
+        next(error);
+    }
+});
+
+tracksRouter.patch("/:id/togglePublished", auth, permit('admin'), async (req, res, next) => {
+    let expressReq = req as RequestWithUser;
+    const trackId = expressReq.params.id;
+
+    try {
+        const track = await Artist.findById(trackId);
+
+        if (!track) {
+            res.status(404).send({error: 'This track not found!'});
+            return;
+        }
+
+        track.isPublished = !track.isPublished;
+
+        await track.save({validateModifiedOnly: true});
+        res.send(track);
     } catch (error) {
         next(error);
     }

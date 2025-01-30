@@ -25,8 +25,11 @@ const UserMenu = () => {
   };
 
   return (
-    <Box sx={{display: 'flex', width: '300px', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px'}}>
-      <Button color='inherit' variant="text" to={'/trackHistory'} component={NavLink} sx={{fontSize: '16px'}}>Track history</Button>
+    <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px'}}>
+      <Button color='inherit' variant="text" to={'/artists/addNewArtist'} component={NavLink} sx={{fontSize: '14px'}}>New artist</Button>
+      <Button color='inherit' variant="text" to={'/albums/addNewAlbum'} component={NavLink} sx={{fontSize: '14px'}}>New album</Button>
+      <Button color='inherit' variant="text" to={'/tracks/addNewTrack'} component={NavLink} sx={{fontSize: '14px'}}>New track</Button>
+      <Button color='inherit' variant="text" to={'/trackHistory'} component={NavLink} sx={{fontSize: '14px'}}>Track history</Button>
       <Button color='inherit' onClick={handleClick}>
         <AccountCircle fontSize="large"/>
       </Button>

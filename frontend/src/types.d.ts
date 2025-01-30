@@ -3,6 +3,13 @@ export interface IArtist {
   name: string;
   description: string;
   image: string | null;
+  isPublished: boolean;
+}
+
+export interface IArtistMutation {
+  name: string;
+  description: string;
+  image: File | null;
 }
 
 export interface IAlbum {
@@ -11,6 +18,14 @@ export interface IAlbum {
   title: string;
   releaseDate: number,
   image: string | null;
+  isPublished: boolean;
+}
+
+export interface IAlbumMutation {
+  artist: string;
+  title: string;
+  releaseDate: string,
+  image: File | null;
 }
 
 export interface ITrack {
@@ -19,6 +34,15 @@ export interface ITrack {
   title: string;
   trackDuration: string;
   number: number;
+  url: string;
+  isPublished: boolean;
+}
+
+export interface ITrackMutation {
+  album: string;
+  title: string;
+  trackDuration: string;
+  number: string;
   url: string;
 }
 
@@ -36,6 +60,7 @@ export interface IUser {
   _id: string;
   username: string;
   token: string;
+  role: string;
 }
 
 export interface UserLoginResponse {

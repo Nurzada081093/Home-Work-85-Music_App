@@ -16,12 +16,17 @@ interface Props {
 const ArtistsCard:React.FC<Props> = ({artist}) => {
   const navigate = useNavigate();
   let artistImage = noPhoto;
+  let publishedArtist;
 
-  if (artist.image) {
-    artistImage = apiUrl + "/" + artist.image;
+  if (artist.isPublished === true) {
+    publishedArtist = artist;
   }
 
-  return (
+  if (publishedArtist && publishedArtist.image) {
+    artistImage = apiUrl + "/" + publishedArtist.image;
+  }
+
+  return publishedArtist && (
     <Card orientation="horizontal" variant="outlined" sx={{ width: '100%', marginBottom: '40px', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }} onClick={() => navigate(`/albums/${artist._id}`)}>
       <CardOverflow>
         <AspectRatio ratio="1" sx={{ width: '200px'}}>
@@ -36,9 +41,9 @@ const ArtistsCard:React.FC<Props> = ({artist}) => {
       </CardOverflow>
       <CardContent sx={{margin: '10px 0 0 10px'}}>
         <Typography textColor="success.plainColor" sx={{ fontWeight: 'md', fontSize: '30px' }}>
-          {artist.name}
+          {publishedArtist.name}
         </Typography>
-        {artist.description ? <Typography level="body-sm">{artist.description}</Typography> : null}
+        {artist.description ? <Typography level="body-sm">{publishedArtist.description}</Typography> : null}
       </CardContent>
     </Card>
   );

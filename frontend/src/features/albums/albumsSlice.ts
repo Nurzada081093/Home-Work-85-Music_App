@@ -1,24 +1,33 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { IAlbum } from '../../types';
-import { getAlbums } from './albunsThunk.ts';
+import { addAlbum, getAlbums } from './albumsThunk.ts';
 import { RootState } from '../../app/store.ts';
 
 interface AlbumsSlice {
   albums: IAlbum[];
   album: IAlbum | null;
-  loading: boolean;
+  loadings: {
+    getAlbumsLoading: boolean;
+    addAlbumLoading: boolean;
+    deleteAlbumLoading: boolean;
+  };
   error: boolean;
 }
 
 const initialState: AlbumsSlice = {
   albums: [],
   album: null,
-  loading: false,
+  loadings: {
+    getAlbumsLoading: false,
+    addAlbumLoading: false,
+    deleteAlbumLoading: false,
+  },
   error: false,
-}
+};
 
 export const SliceAlbums = (state: RootState) => state.albums.albums;
-export const SliceLoading = (state: RootState) => state.albums.loading;
+export const SliceLoading = (state: RootState) => state.albums.loadings.getAlbumsLoading;
+export const SliceAddLoading = (state: RootState) => state.albums.loadings.addAlbumLoading;
 
 const albumsSlice = createSlice({
   name: 'albums',
@@ -27,16 +36,28 @@ const albumsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getAlbums.pending, (state) => {
-        state.loading = true;
+        state.loadings.getAlbumsLoading = true;
         state.error = false;
       })
       .addCase(getAlbums.fulfilled, (state, {payload: albums}) => {
-        state.loading = false;
+        state.loadings.getAlbumsLoading = false;
         state.albums = albums;
         state.error = false;
       })
       .addCase(getAlbums.rejected, (state) => {
-        state.loading = false;
+        state.loadings.getAlbumsLoading = false;
+        state.error = true;
+      })
+      .addCase(addAlbum.pending, (state) => {
+        state.loadings.addAlbumLoading = true;
+        state.error = false;
+      })
+      .addCase(addAlbum.fulfilled, (state) => {
+        state.loadings.addAlbumLoading = false;
+        state.error = false;
+      })
+      .addCase(addAlbum.rejected, (state) => {
+        state.loadings.addAlbumLoading = false;
         state.error = true;
       });
   }

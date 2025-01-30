@@ -1,12 +1,12 @@
-import { useAppDispatch, useAppSelector } from '../../../../app/hooks.ts';
-import { SliceAlbums, SliceLoading } from '../../albumsSlice.ts';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks.ts';
+import { SliceAlbums, SliceLoading } from '../albumsSlice.ts';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getAlbums } from '../../albunsThunk.ts';
+import { getAlbums } from '../albumsThunk.ts';
 import Typography from '@mui/joy/Typography';
 import { Container } from '@mui/material';
-import AlbumsCards from '../../components/AlbumsCards/AlbumsCards.tsx';
-import Loading from '../../../../components/UI/Loading/Loading.tsx';
+import AlbumsCards from '../components/AlbumsCards/AlbumsCards.tsx';
+import Loading from '../../../components/UI/Loading/Loading.tsx';
 
 const AlbumsContainer = () => {
   const albums = useAppSelector(SliceAlbums);
