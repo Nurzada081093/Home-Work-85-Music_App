@@ -13,6 +13,7 @@ import { UserLogin } from '../../../../types';
 import { useAppSelector } from '../../../../app/hooks.ts';
 import { loginErrorFromSlice, loginLoadingFromSlice } from '../../usersSlice.ts';
 import { toast } from 'react-toastify';
+import { GoogleLogin } from '@react-oauth/google';
 
 interface Props {
   login: (user: UserLogin) => void;
@@ -71,6 +72,11 @@ const LoginForm: React.FC<Props> = ({login}) => {
             {loginError.error}
           </Alert>
         )}
+        <Box sx={{pt: 2}}>
+          <GoogleLogin onSuccess={((credentialResponse) => {
+            console.log(credentialResponse);
+          })} onError={() => alert('Login failed!')}/>
+        </Box>
         <Box component="form" noValidate onSubmit={submitUser} sx={{ mt: 3 }}>
           <Grid container direction={'column'} spacing={2}>
             <Grid size={12}>

@@ -41,7 +41,16 @@ const UserSchema = new Schema<HydratedDocument<UserData>, UserModel, UserMethods
     token: {
         type: String,
         required: [true, 'Token is required'],
-    }
+    },
+    displayName: {
+        type: String,
+        required: [true, 'Display name is required'],
+    },
+    googleId: {
+        type: String,
+        default: null,
+    },
+    avatar: String,
 });
 
 UserSchema.pre("save", async function (next) {

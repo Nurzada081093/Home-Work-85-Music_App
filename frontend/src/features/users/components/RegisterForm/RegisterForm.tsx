@@ -12,6 +12,7 @@ import { UserRegister } from '../../../../types';
 import { useAppSelector } from '../../../../app/hooks.ts';
 import { registerErrorFromSlice, registerLoadingFromSlice } from '../../usersSlice.ts';
 import { CircularProgress } from '@mui/material';
+import { GoogleLogin } from '@react-oauth/google';
 
 interface Props {
   register: (user: UserRegister) => void;
@@ -68,6 +69,11 @@ const RegisterForm: React.FC<Props> = ({register}) => {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
+        <Box sx={{pt: 2}}>
+          <GoogleLogin onSuccess={((credentialResponse) => {
+            console.log(credentialResponse);
+          })} onError={() => alert('Login failed!')}/>
+        </Box>
         <Box component="form" noValidate onSubmit={submitUser} sx={{ mt: 3 }}>
           <Grid container direction={'column'} spacing={2}>
             <Grid size={12}>

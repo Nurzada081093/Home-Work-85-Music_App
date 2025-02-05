@@ -1,16 +1,69 @@
 import express from "express";
 import {Error} from "mongoose";
 import User from "../models/User";
+import {OAuth2Client} from "google-auth-library";
+import config from "../config";
+import {imagesUpload} from "../multer";
+
+const client = new OAuth2Client(config.google.clientId);
 
 const userRouter = express.Router();
 
-userRouter.post("/register", async (req, res, next) => {
-    const {username, password} = req.body;
+userRouter.post("/google", async (req, res, next) => {
+    try {
+        const ticket = await client.verifyIdToken({
+            idToken: req.body.credential,
+            audience: config.google.clientId,
+        });
+
+        const payload = ticket.getPayload();
+
+        if (!payload) {
+            res.status(400).send({error: "Invalid credential. Google login error!"});
+            return;
+        }
+
+        const email = payload.email;
+        const id = payload.sub;
+        const displayName = payload.name;
+
+        if (!email) {
+            res.status(400).send({error: "No enough user data to continue!"});
+            return;
+        }
+
+        let user = await User.findOne({googleId: id});
+
+        if (!user) {
+            user = new User({
+                username: email,
+                password: crypto.randomUUID(),
+                googleId: id,
+                displayName,
+            });
+        }
+
+        user.generateToken();
+        await user.save();
+        res.send({user, message: 'Login with Google success!'});
+    } catch (error) {
+        if (error instanceof Error.ValidationError) {
+            res.status(400).send(error);
+            return;
+        }
+
+        next(error);
+    }
+});
+
+userRouter.post("/register", imagesUpload.single('avatar'), async (req, res, next) => {
 
     try {
         const user = new User({
-            username,
-            password,
+            username: req.body.username,
+            password: req.body.password,
+            displayName: req.body.displayName,
+            avatar: req.file ? 'images' + req.file.filename : null,
         });
 
         user.generateToken();
