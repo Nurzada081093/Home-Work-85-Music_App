@@ -4,6 +4,7 @@ import User from "../models/User";
 import {OAuth2Client} from "google-auth-library";
 import config from "../config";
 import {imagesUpload} from "../multer";
+import auth, {RequestWithUser} from "../middleware/auth";
 
 const client = new OAuth2Client(config.google.clientId);
 
@@ -114,6 +115,22 @@ userRouter.post("/sessions", async (req, res, next) => {
         }
 
         next(error);
+    }
+});
+
+userRouter.delete('/sessions', auth, async (req, res, next) => {
+    let reqWithAuth = req as RequestWithUser;
+    const authUser = reqWithAuth.user;
+
+    try {
+        const user = await User.findOne({_id: authUser._id});
+        if (user) {
+            user.generateToken();
+            await user.save();
+            res.send({message: 'Success logout'});
+        }
+    } catch (e) {
+        next(e);
     }
 });
 

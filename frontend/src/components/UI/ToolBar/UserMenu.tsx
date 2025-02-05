@@ -23,8 +23,8 @@ const UserMenu = () => {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    dispatch(logoutUser());
+  const handleLogout = async () => {
+    await dispatch(logoutUser());
     dispatch(clearUser());
   };
 
