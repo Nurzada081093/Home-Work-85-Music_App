@@ -25,12 +25,16 @@ const run = async () => {
             password: '123',
             role: 'admin',
             token: randomUUID(),
+            displayName: 'Molly Gordon',
+            avatar: 'fixtures/Molly_Gordon.jpg',
         },
         {
             username: 'Sally',
             password: '123',
             role: 'user',
             token: randomUUID(),
+            displayName: 'Sally Lau',
+            avatar: 'fixtures/Sally_Lau.jpg',
         },
     );
 

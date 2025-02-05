@@ -7,13 +7,14 @@ import Box from '@mui/material/Box';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { Alert, CircularProgress } from '@mui/material';
 import { UserLogin } from '../../../../types';
-import { useAppSelector } from '../../../../app/hooks.ts';
+import { useAppDispatch, useAppSelector } from '../../../../app/hooks.ts';
 import { loginErrorFromSlice, loginLoadingFromSlice } from '../../usersSlice.ts';
 import { toast } from 'react-toastify';
 import { GoogleLogin } from '@react-oauth/google';
+import { googleLoginOrRegisterUser } from '../../usersThunk.ts';
 
 interface Props {
   login: (user: UserLogin) => void;
@@ -28,6 +29,8 @@ const LoginForm: React.FC<Props> = ({login}) => {
   const [loginForm, setLoginForm] = useState<UserLogin>(initialUserState);
   const loginError = useAppSelector(loginErrorFromSlice);
   const loading = useAppSelector(loginLoadingFromSlice);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const onChangeUser = (e: React.ChangeEvent<HTMLInputElement>)=> {
     const {name, value} = e.target;
@@ -46,6 +49,11 @@ const LoginForm: React.FC<Props> = ({login}) => {
     } else {
       login({...loginForm});
     }
+  };
+
+  const googleLogin = async (credential: string) => {
+    await dispatch(googleLoginOrRegisterUser(credential)).unwrap();
+    navigate('/');
   };
 
   return (
@@ -74,7 +82,9 @@ const LoginForm: React.FC<Props> = ({login}) => {
         )}
         <Box sx={{pt: 2}}>
           <GoogleLogin onSuccess={((credentialResponse) => {
-            console.log(credentialResponse);
+            if (credentialResponse.credential) {
+              void googleLogin(credentialResponse.credential);
+            }
           })} onError={() => alert('Login failed!')}/>
         </Box>
         <Box component="form" noValidate onSubmit={submitUser} sx={{ mt: 3 }}>

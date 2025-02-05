@@ -6,13 +6,15 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import { UserRegister } from '../../../../types';
-import { useAppSelector } from '../../../../app/hooks.ts';
+import { useAppDispatch, useAppSelector } from '../../../../app/hooks.ts';
 import { registerErrorFromSlice, registerLoadingFromSlice } from '../../usersSlice.ts';
 import { CircularProgress } from '@mui/material';
 import { GoogleLogin } from '@react-oauth/google';
+import { googleLoginOrRegisterUser } from '../../usersThunk.ts';
+import FileInput from '../../../../components/FileInput/FileInput.tsx';
 
 interface Props {
   register: (user: UserRegister) => void;
@@ -20,13 +22,17 @@ interface Props {
 
 const initialUserState = {
   username: '',
-  password: ''
+  password: '',
+  displayName: '',
+  avatar: null,
 };
 
 const RegisterForm: React.FC<Props> = ({register}) => {
   const [registerForm, setRegisterForm] = useState<UserRegister>(initialUserState);
   const registerError = useAppSelector(registerErrorFromSlice);
   const loading = useAppSelector(registerLoadingFromSlice);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const onChangeUser = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target;
@@ -50,6 +56,22 @@ const RegisterForm: React.FC<Props> = ({register}) => {
     }
   };
 
+  const fileEventChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, files } = e.target;
+
+    if (files) {
+      setRegisterForm((prevState) => ({
+        ...prevState,
+        [name]: files[0] || null,
+      }));
+    }
+  };
+
+  const googleRegister = async (credential: string) => {
+    await dispatch(googleLoginOrRegisterUser(credential)).unwrap();
+    navigate('/');
+  };
+
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -71,7 +93,9 @@ const RegisterForm: React.FC<Props> = ({register}) => {
         </Typography>
         <Box sx={{pt: 2}}>
           <GoogleLogin onSuccess={((credentialResponse) => {
-            console.log(credentialResponse);
+            if (credentialResponse.credential) {
+              void googleRegister(credentialResponse.credential);
+            }
           })} onError={() => alert('Login failed!')}/>
         </Box>
         <Box component="form" noValidate onSubmit={submitUser} sx={{ mt: 3 }}>
@@ -90,6 +114,17 @@ const RegisterForm: React.FC<Props> = ({register}) => {
             <Grid size={12}>
               <TextField
                 fullWidth
+                id="displayName"
+                label="Display name"
+                name="displayName"
+                onChange={onChangeUser}
+                error={Boolean(getError('displayName'))}
+                helperText={getError('displayName')}
+              />
+            </Grid>
+            <Grid size={12}>
+              <TextField
+                fullWidth
                 name="password"
                 label="Password"
                 type="password"
@@ -97,6 +132,13 @@ const RegisterForm: React.FC<Props> = ({register}) => {
                 onChange={onChangeUser}
                 error={Boolean(getError('password'))}
                 helperText={getError('password')}
+              />
+            </Grid>
+            <Grid size={12}>
+              <FileInput
+                name="avatar"
+                label="Avatar"
+                onGetFile={fileEventChange}
               />
             </Grid>
           </Grid>

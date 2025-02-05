@@ -3,9 +3,11 @@ import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks.ts';
 import { logoutUser } from '../../../features/users/usersThunk.ts';
 import { clearUser, userFromSlice } from '../../../features/users/usersSlice.ts';
-import { AccountCircle } from '@mui/icons-material';
 import Box from '@mui/material/Box';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { Avatar } from '@mui/joy';
+import { apiUrl } from '../../../globalConstants.ts';
+import Typography from '@mui/material/Typography';
 
 const UserMenu = () => {
   const user = useAppSelector(userFromSlice);
@@ -27,13 +29,20 @@ const UserMenu = () => {
   };
 
   return (
-    <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px'}}>
-      <Button color='inherit' variant="text" to={'/artists/addNewArtist'} component={NavLink} sx={{fontSize: '14px'}}>New artist</Button>
-      <Button color='inherit' variant="text" to={'/albums/addNewAlbum'} component={NavLink} sx={{fontSize: '14px'}}>New album</Button>
-      <Button color='inherit' variant="text" to={'/tracks/addNewTrack'} component={NavLink} sx={{fontSize: '14px'}}>New track</Button>
-      <Button color='inherit' variant="text" to={'/trackHistory'} component={NavLink} sx={{fontSize: '14px'}}>Track history</Button>
-      <Button color='inherit' onClick={handleClick}>
-        <AccountCircle fontSize="large"/>
+    <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '10px 0'}}>
+      {user && (
+        <Typography component="h1" variant="h5">
+          {user.displayName}
+        </Typography>
+      )}
+      <Button color='inherit' onClick={handleClick} sx={{
+        marginLeft: '10px'
+      }}>
+        {user && user.googleId ?
+          <Avatar alt={user.displayName} src={user.avatar} size="lg"/>
+          :
+          <Avatar alt={user?.displayName} src={apiUrl + '/' + user?.avatar} size="lg"/>
+        }
       </Button>
       <Menu
         anchorEl={anchorEl}

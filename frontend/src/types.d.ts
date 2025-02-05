@@ -52,6 +52,8 @@ export interface ITrackMutation {
 export interface UserRegister {
   username: string;
   password: string;
+  displayName: string;
+  avatar: File | null;
 }
 
 export interface UserLogin {
@@ -64,6 +66,9 @@ export interface IUser {
   username: string;
   token: string;
   role: string;
+  displayName: string;
+  avatar: string | undefined;
+  googleId: string | null;
 }
 
 export interface UserLoginResponse {
